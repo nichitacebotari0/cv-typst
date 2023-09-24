@@ -112,15 +112,17 @@
   )
   set text(9.8pt, font: "Lato")
   set page(
-    margin: (x: 46pt, y: 52pt),
+    margin: (x: 46pt, y: 46pt),
   )
 
-  show heading.where(
+   show heading.where(
     level: 1
-  ): it => text(
-    {it.body}
-  )
-
+  ): it => {
+    text(
+      fill: primary_colour,
+      it.body
+  )}
+  
   show heading.where(
     level: 2
   ): it => text(
@@ -144,12 +146,13 @@
   ): it => text(it.body)
 
   stack(dir: ltr, spacing: 5pt,
-    rect(width: 60pt, height: 60pt),
-    box({
-    [= #name]
+  image(width: 60pt,
+  "icons/" + "photo.jpg"),
+  stack(dir: ttb,
+    v(3pt),
+    [= #name],
     findMe(links)
-    }),
-  )
+  ))
   content
 }
 
