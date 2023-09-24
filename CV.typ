@@ -1,6 +1,6 @@
 #let primary_colour = rgb("#3E0C87") // vivid purple
 #let link_colour = rgb("#12348e") // blue
-#let dark_gray = rgb("#414161")
+#let light_purple = rgb("#975bf1") // light purple
 
 #let icon(name, shift: 1.5pt) = {
   box(
@@ -16,6 +16,7 @@
   let icon = icon.with(shift: 2.5pt)
 
   services.map(service => {
+      linebreak()
       icon(service.name)
 
       if "display" in service.keys() {
@@ -25,20 +26,82 @@
       }
     }).join(h(10pt))
   [
-    
   ]
 }
 
 #let term(period, location) = {
-  text(9pt)[#icon("calendar") #period #h(1fr) /* #icon("location") #location */]
+  text(light_purple,9pt)[#icon("calendar") #period #h(1fr) /* #icon("location") #location */]
 }
 
 #let styled-link(dest, content) = emph(text(
     fill: link_colour,
-    link(dest, content)
+    link(dest, content) 
   ))
 
-#let alta(
+
+#let workplace(jobName, imageName, period, sidebarWidth: 30pt, location: "Chisinau, MD") = {
+   grid(
+    columns: (sidebarWidth, auto),
+    gutter: 5pt,
+    image("icons/" + imageName),
+    [
+      #v(3pt) 
+      #heading(level: 3, jobName) \
+      #term[#period][]
+    ])
+}
+
+#let positions(items: (), sidebarWidth: 30pt) = { layout(size => style(styles => {
+  let n = 0
+  for item in items {
+    let sidebarCircle = box(
+      width: sidebarWidth,
+      align(center + top,
+        circle(radius: 2.5pt, stroke: light_purple)
+      )
+    )
+    let positionHeader = [
+      #heading(level: 4,item.name)
+      #linebreak()
+      #if "period" in item.keys() {
+        term[#item.period][]
+        }
+      ]
+    stack(dir: ltr,
+    sidebarCircle,
+    positionHeader)
+
+    let positionDescription = [
+      #item.description
+    ]
+    let heightOfTitle = measure(block(width: size.width, positionHeader), styles).height
+    let heightOfDescription = measure(block(width:size.width, positionDescription), styles).height
+
+    let continuationLine = [
+      #if (n < items.len() - 1) {
+        block(
+          width: sidebarWidth,
+          inset: 0pt,
+          align(center + top, 
+            {
+              v(-heightOfTitle)
+              rect(width: 1pt,height: heightOfDescription+heightOfTitle, fill: light_purple)
+            })
+          )
+      } else {
+        block(width: sidebarWidth)
+      }
+    ]
+
+    box(stack(dir: ltr,
+    continuationLine,
+    positionDescription))
+    n += 1;
+  }
+}))}
+
+
+#let cv(
   name: "",
   links: (),
   content,
@@ -47,9 +110,15 @@
     title: name + "'s CV",
     author: name,
   )
-  set text(9.8pt, font: "IBM Plex Sans")
+  set text(9.8pt, font: "Lato")
   set page(
-    margin: (x: 54pt, y: 52pt),
+    margin: (x: 46pt, y: 52pt),
+  )
+
+  show heading.where(
+    level: 1
+  ): it => text(
+    {it.body}
   )
 
   show heading.where(
@@ -65,28 +134,26 @@
 
   show heading.where(
     level: 3
-  ): it => text(it.body)
-  
-  show heading.where(
-    level: 4
   ): it => text(
     fill: primary_colour,
     it.body
   )
 
-  [= #name]
+  show heading.where(
+    level: 4
+  ): it => text(it.body)
 
-  findMe(links)
-
-  columns(
-    1,
-    gutter: 15pt,
-    content,
+  stack(dir: ltr, spacing: 5pt,
+    rect(width: 60pt, height: 60pt),
+    box({
+    [= #name]
+    findMe(links)
+    }),
   )
+  content
 }
 
-
-#alta(
+#cv(
   name: "Nichita Cebotari",
   links: (
     (name: "email", link: "mailto:example@gmail.com"),
@@ -96,27 +163,28 @@
   ),
   [
     == Experience
+    #workplace("Alvys", "Alvys.jpg","Feb 2023 --- Present", sidebarWidth: 30pt)
+    #positions(items: (
+      (name: "Senior Software Engineer",
+       description: [Project was a Transportation Management System for truck freight in USA. Working for over half a year on a *ASP .NET 7 Web Api* written in *C\#*. The Web Api was hosted in *Azure* Web App with *Cosmos Db* as the main data store and azure yaml pipelines for CI and classic releases for CD. Responsible for implementing the communication protocol *AS2* and business logic used for integrating with third parties, also served as a point of contact for said third parties.],
+       period: "time - time"),
+      ))
 
-    === Senior Software Engineer \
-    _Alvys_\
-    #term[Feb 2023 --- Present][Chisinau, MD]
+    #workplace("Endava", "endava.jpg","Mar 2018 --- Mar 2022", sidebarWidth: 30pt)
+    #positions(items: (
+      (name: "Software Engineer",
+       description: [Most recent project was a clearing bank *SOA* multi-tenant application. I was involved in the data team where we would gather data from other services that communicated over *Azure Service Bus* and process it with streaming jobs written in *Scala* using *Databricks*. Also was responsible for writing scheduled jobs that would run daily using *Azure Functions*. Deployments were done using *Terraform* and azure *Yaml pipelines*.]),
+      (name: "Software Developer",
+       description: [Worked for over 2 years on financial derivatives trading platform made up of *Windows Services* wrttien in *.NET Framework 4.6* communicating over a pub-sub *Message Bus*. Main storage was *MySQL* with data being served by a specific service. Responsibilities included imiplementing new features, fixing bugs inlegacy code, rewriting components or entire services when needed, updating *WCF* contracts exposed to upstream providers of pricing data,etc.]),
+       (name: "Junior Software Developer",
+       description: [One of the earliest projects I was involved in was a desktop app *Windows Forms*, used by brokers to approve/reject trades.Application was written in *C\#* using a *Model-View-Presenter* architecture, it communicated with backend services over a a message bus.]),
+       (name: "Intern",
+       description: [As part of internship had to implement an *MVC* backend app used for an internal library app meant for inventory tracking and allowing borrowing of books. It was written in *C\#*, using code-first *Entity Framework* to communicate with an *MSSQL* database.])
+    ))
+   
+    References available on request 
 
-    - Project was a Transportation Management System for truck freight in USA. Working for over half a year on a *ASP .NET 7 Web Api* written in *C\#*. The Web Api was hosted in *Azure* Web App with *Cosmos Db* as the main data store and azure yaml pipelines for CI and classic releases for CD. Responsible for implementing the communication protocol *AS2* and business logic used for integrating with third parties, also served as a point of contact for said third parties.
-
-    === Software Engineer \
-    _Endava_\
-    #term[Mar 2018 --- Mar 2022][Chisinau, MD]
-
-    - Most recent project was a clearing bank *SOA* multi-tenant application. I was involved in the data team where we would gather data from other services that communicated over *Azure Service Bus* and process it with streaming jobs written in *Scala* using *Databricks*. Also was responsible for writing data integrity checks that would run daily using *Azure Functions*. Deployments were done using *Terraform* and azure *Yaml pipelines*.
-
-    - Worked for over 2 years on financial derivatives trading platform made up of *Windows Services* wrttien in *.NET Framework 4.6* communicating over a pub-sub *Message Bus*. Main storage was *MySQL* with data being served by a specific service. Responsibilities included imiplementing new features, fixing bugs inlegacy code, rewriting components or entire services when needed, updating *WCF* contracts exposed to upstream providers of pricing data,etc.
-
-    - One of the earliest projects I was involved in was a desktop app *Windows Forms*, used by brokers to approve/reject trades.Application was written in *C\#* using a *Model-View-Presenter* architecture, it communicated with backend services over a a message bus.
-
-    - As part of initial internship had to implement an *MVC* backend app used for an internal library app meant for inventory tracking and allowing borrowing of books. It was written in *C\#*, using code-first *Entity Framework* to communicate with an *MSSQL* database.
-
-    References available on request
-
+    #pagebreak()
     == Education
 
     === Associate Degree \
@@ -126,7 +194,6 @@
     Professional Diploma in Computer Science.
 
     // == Interests
-
     // - Bouldering
     // - Video Game Development
     // - The Zig programming language
@@ -134,15 +201,12 @@
     == Languages
 
     *English:* Fluent \
-    *Romanian:* Native \
+    *Romanian:* Fluent \
     *Russian:* Fluent \
 
     // == Projects
-
     // ==== #link("https://example.com")[Some project]
-
     // #lorem(30)
-    
     // #styled-link("https://example.com")[Example page]
-  ],
+  ]
 )
