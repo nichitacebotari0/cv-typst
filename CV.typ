@@ -163,7 +163,7 @@
   ),
   [
     == Experience
-    #workplace("Alvys", "Alvys.jpg","Feb 2023 --- Present", sidebarWidth: 30pt)
+    #workplace("Alvys", "alvys.jpg","Feb 2023 --- Present", sidebarWidth: 30pt)
     #positions(items: (
       (name: "Senior Software Engineer",
        description: [Project was a Transportation Management System for truck freight in USA. Working for over half a year on a *ASP .NET 7 Web Api* written in *C\#*. The Web Api was hosted in *Azure* Web App with *Cosmos Db* as the main data store and azure yaml pipelines for CI and classic releases for CD. Responsible for implementing the communication protocol *AS2* and business logic used for integrating with third parties, also served as a point of contact for said third parties.]),
