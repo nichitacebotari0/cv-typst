@@ -51,7 +51,8 @@
     ])
 }
 
-#let positions(items: (), sidebarWidth: 30pt) = { layout(size => style(styles => {
+#let positions(items: (), sidebarWidth: 30pt) = {
+  layout(size => context {
   let n = 0
   for item in items {
     let sidebarCircle = box(
@@ -71,8 +72,8 @@
     let positionDescription = [
       #item.description
     ]
-    let heightOfTitle = measure(block(width: size.width, positionHeader), styles).height
-    let heightOfDescription = measure(block(width:size.width, positionDescription), styles).height
+      let heightOfTitle = measure(block(width: size.width, positionHeader)).height
+      let heightOfDescription = measure(block(width:size.width, positionDescription)).height
 
     let continuationLine = [
       #if (n < items.len() - 1) {
@@ -95,7 +96,8 @@
     positionDescription))
     n += 1;
   }
-}))}
+})
+}
 
 
 #let cv(
@@ -162,8 +164,18 @@
     (name: "linkedin", link: "https://www.linkedin.com/in/nichita-cebotari-015b15176/", display: "Nichita Cebotari"),
   ),
   [
+    // == About
+    // Software Engineer.
+
+
     == Experience
-    #workplace("Alvys", "alvys.jpg","Feb 2023 --- Present", sidebarWidth: 30pt)
+    #workplace("Klimate", "KlimateIconDarkGrey.svg","Jan 2024 --- Present", sidebarWidth: 30pt)
+    #positions(items: (
+      (name: "Senior Software Engineer",
+       description: [Project was a carbon asset management system that supported accounting of carbon removal tonnes, . Working for close to 2 years on *ASP .NET 9 Web Api* backend written in *C\#* and a *Vue* frontend hosted in *Azure Web App*, using *GraphQL* for frontend-backend communication. Used *EF Core* to communicate and manage mgirations on our *PostgreSQL* database, *github workflows* for CI/CD, and some *Azure Functions* for scheduled jobs. Some areas I worked in: Carbon credit accounting,lifecycle management and data consistency between Procuered and Sold, Invoicing and Credit Notes, Refactored business logic from endpoints into services, added testing, etc.]),
+      ))
+
+    #workplace("Alvys", "alvys.jpg","Feb 2023 --- Jan 2024", sidebarWidth: 30pt)
     #positions(items: (
       (name: "Senior Software Engineer",
        description: [Project was a Transportation Management System for truck freight in USA. Working for over half a year on a *ASP .NET 7 Web Api* written in *C\#*. The Web Api was hosted in *Azure* Web App with *Cosmos Db* as the main data store and azure yaml pipelines for CI and classic releases for CD. Responsible for implementing the communication protocol *AS2* and business logic used for integrating with third parties, also served as a point of contact for said third parties.]),
@@ -174,9 +186,9 @@
       (name: "Software Engineer",
        description: [Most recent project was a clearing bank *SOA* multi-tenant application. I was involved in the data team where we would gather data from other services that communicated over *Azure Service Bus* and process it with streaming jobs written in *Scala* using *Databricks*. Also was responsible for writing scheduled jobs that would run daily using *Azure Functions*. Deployments were done using *Terraform* and azure *Yaml pipelines*.]),
       (name: "Software Developer",
-       description: [Worked for over 2 years on financial derivatives trading platform made up of *Windows Services* wrttien in *.NET Framework 4.6* communicating over a pub-sub *Message Bus*. Main storage was *MySQL* with data being served by a specific service. Responsibilities included imiplementing new features, fixing bugs inlegacy code, rewriting components or entire services when needed, updating *WCF* contracts exposed to upstream providers of pricing data,etc.]),
+       description: [Worked for over 2 years on financial derivatives trading platform made up of *Windows Services* wrttien in *.NET Framework 4.6* communicating over a pub-sub *Message Bus*. Main storage was *MySQL* with data being served by a specific service. Responsibilities included implementing new features, fixing bugs in legacy code, rewriting components or entire services when needed, updating *WCF* contracts exposed to upstream providers of pricing data,etc.]),
        (name: "Junior Software Developer",
-       description: [One of the earliest projects I was involved in was a desktop app *Windows Forms*, used by brokers to approve/reject trades.Application was written in *C\#* using a *Model-View-Presenter* architecture, it communicated with backend services over a a message bus.]),
+       description: [One of the earliest projects I was involved in was a desktop app *Windows Forms*, used by brokers to approve/reject trades. Application was written in *C\#* using a *Model-View-Presenter* architecture, it communicated with backend services over a message bus.]),
        (name: "Intern",
        description: [As part of internship had to implement an *MVC* backend app used for an internal library app meant for inventory tracking and allowing borrowing of books. It was written in *C\#*, using code-first *Entity Framework* to communicate with an *MSSQL* database.])
     ))
@@ -188,7 +200,7 @@
 
     === Associate Degree \
     _C.E.I.T.I._\
-    #term[Sep 2019 --- Jul 2023][Location, UK]
+    #term[Sep 2014 --- Jul 2018][]
 
     Professional Diploma in Computer Science.
 
